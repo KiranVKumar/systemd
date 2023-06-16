@@ -1000,8 +1000,10 @@ EOF
 #!/usr/bin/env bash
 set -eux
 
+export PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 export ${default_environment[@]}
 [[ -n "\$ASAN_OPTIONS" && -n "\$UBSAN_OPTIONS" ]]
+
 exec "$ROOTLIBDIR/systemd" "\$@"
 EOF
     chmod 0755 "$asan_wrapper"
@@ -2590,7 +2592,7 @@ inst_simple() {
         inst "${src%/*}/.${src##*/}.hmac" "${target%/*}/.${target##*/}.hmac"
     fi
     ddebug "Installing $src"
-    cp --sparse=always -pfL "$src" "${initdir}/$target"
+    cp --sparse=always --force --dereference --preserve=all "$src" "${initdir}/$target"
 }
 
 # find symlinks linked to given library file

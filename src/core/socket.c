@@ -82,7 +82,7 @@ static void socket_init(Unit *u) {
         assert(u);
         assert(u->load_state == UNIT_STUB);
 
-        s->backlog = SOMAXCONN;
+        s->backlog = SOMAXCONN_DELUXE;
         s->timeout_usec = u->manager->default_timeout_start_usec;
         s->directory_mode = 0755;
         s->socket_mode = 0666;
@@ -3519,7 +3519,7 @@ SocketTimestamping socket_timestamping_from_string_harder(const char *p) {
          * too. */
         if (streq(p, "nsec"))
                 return SOCKET_TIMESTAMPING_NS;
-        if (STR_IN_SET(p, "usec", "µs"))
+        if (STR_IN_SET(p, "usec", "µs", "μs")) /* Accept both small greek letter mu + micro sign unicode codepoints */
                 return SOCKET_TIMESTAMPING_US;
 
         r = parse_boolean(p);

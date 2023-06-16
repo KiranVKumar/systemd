@@ -2867,7 +2867,7 @@ static int load_credential_glob(
                 if (r < 0)
                         return r;
 
-                for (unsigned n = 0; n < pglob.gl_pathc; n++) {
+                for (size_t n = 0; n < pglob.gl_pathc; n++) {
                         _cleanup_free_ char *fn = NULL;
                         _cleanup_(erase_and_freep) char *data = NULL;
                         size_t size;
@@ -4584,7 +4584,7 @@ static bool exec_context_need_unprivileged_private_users(const ExecContext *cont
                context->network_namespace_path ||
                context->private_ipc ||
                context->ipc_namespace_path ||
-               context->private_mounts ||
+               context->private_mounts > 0 ||
                context->mount_apivfs ||
                context->n_bind_mounts > 0 ||
                context->n_temporary_filesystems > 0 ||
@@ -6253,7 +6253,7 @@ static int exec_context_load_environment(const Unit *unit, const ExecContext *c,
                 /* When we don't match anything, -ENOENT should be returned */
                 assert(pglob.gl_pathc > 0);
 
-                for (unsigned n = 0; n < pglob.gl_pathc; n++) {
+                for (size_t n = 0; n < pglob.gl_pathc; n++) {
                         _cleanup_strv_free_ char **p = NULL;
 
                         r = load_env_file(NULL, pglob.gl_pathv[n], &p);
